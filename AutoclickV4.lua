@@ -23,7 +23,7 @@ OpenButton.Text = "Autoclick V4"
 OpenButton.TextColor3 = Color3.fromRGB(255, 255, 255)
 OpenButton.TextScaled = true
 OpenButton.MouseButton1Click:Connect(function()
-	MainFrame.Visible = true
+    MainFrame.Visible = true
 end)
 
 MainFrame.Parent = ScreenGui
@@ -46,7 +46,7 @@ CloseButton.Text = "X"
 CloseButton.TextColor3 = Color3.fromRGB(255, 255, 255)
 CloseButton.TextScaled = true
 CloseButton.MouseButton1Click:Connect(function()
-	MainFrame.Visible = false
+    MainFrame.Visible = false
 end)
 
 TitleLabel.Parent = MainFrame
@@ -99,7 +99,6 @@ local autoClickEnabled = true
 local shiftPressed = false
 spawn(function()
     task.wait(0.5)
-    
     if not shiftPressed then
         local virtualInput = game:GetService("VirtualInputManager")
         virtualInput:SendKeyEvent(true, Enum.KeyCode.LeftShift, false, nil)
@@ -110,34 +109,45 @@ spawn(function()
 end)
 
 local function autoClickLoop()
-	while true do
-		if autoClickEnabled then
-			local character = player.Character
-			if character then
-				local tool = character:FindFirstChildOfClass("Tool")
-				if tool and tool:FindFirstChild("Handle") then
-					tool:Activate()
-				end
-			end
-		end
-		task.wait(autoClickSpeed)
-	end
+    while true do
+        if autoClickEnabled then
+            local character = player.Character
+            if character then
+                local tool = character:FindFirstChildOfClass("Tool")
+                if tool and tool:FindFirstChild("Handle") then
+                    tool:Activate()
+                end
+            end
+        end
+        task.wait(autoClickSpeed)
+    end
 end
 
 task.spawn(autoClickLoop)
 
 ApplyButton.MouseButton1Click:Connect(function()
-	local newSpeed = tonumber(SpeedBox.Text)
-	if newSpeed and newSpeed > 0 then
-		autoClickSpeed = 1 / newSpeed
-		SpeedLabel.Text = "Velocidad actual: " .. newSpeed
-	else
-		SpeedLabel.Text = "Velocidad actual: Inválida"
-	end
+    local newSpeed = tonumber(SpeedBox.Text)
+    if newSpeed and newSpeed > 0 then
+        autoClickSpeed = 1 / newSpeed
+        autoClickEnabled = true
+        SpeedLabel.Text = "Velocidad actual: " .. newSpeed
+    elseif newSpeed == 0 then
+        autoClickEnabled = false
+        local character = player.Character
+        if character then
+            local tool = character:FindFirstChildOfClass("Tool")
+            if tool and tool:FindFirstChild("Handle") then
+                tool:Deactivate()
+            end
+        end
+        SpeedLabel.Text = "Autoclick desactivado"
+    else
+        SpeedLabel.Text = "Velocidad actual: Inválida"
+    end
 end)
 
 player.CharacterAdded:Connect(function()
-	autoClickEnabled = true
+    autoClickEnabled = true
 end)
 
 pcall(function()
