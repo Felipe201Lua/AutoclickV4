@@ -1,4 +1,4 @@
---Felip's Autoclick Script
+--Cuando yo diga Canser todo el mundo dice bero
 
 local ScreenGui = Instance.new("ScreenGui")
 local OpenButton = Instance.new("TextButton")
@@ -11,6 +11,8 @@ local ApplyButton = Instance.new("TextButton")
 local UICornerApplyButton = Instance.new("UICorner")
 local TitleLabel = Instance.new("TextLabel")
 local SpeedLabel = Instance.new("TextLabel")
+local ToggleButton = Instance.new("TextButton")
+local UICornerToggle = Instance.new("UICorner")
 
 ScreenGui.Parent = game.CoreGui
 
@@ -29,7 +31,7 @@ end)
 MainFrame.Parent = ScreenGui
 MainFrame.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
 MainFrame.Position = UDim2.new(0.3, 0, 0.3, 0)
-MainFrame.Size = UDim2.new(0, 250, 0, 150)
+MainFrame.Size = UDim2.new(0, 250, 0, 200)
 MainFrame.Visible = false
 MainFrame.Active = true
 MainFrame.Draggable = true
@@ -60,7 +62,7 @@ TitleLabel.TextScaled = true
 
 SpeedBox.Parent = MainFrame
 SpeedBox.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
-SpeedBox.Position = UDim2.new(0.1, 0, 0.3, 0)
+SpeedBox.Position = UDim2.new(0.1, 0, 0.22, 0)
 SpeedBox.Size = UDim2.new(0, 200, 0, 30)
 SpeedBox.Font = Enum.Font.Gotham
 SpeedBox.PlaceholderText = "Velocidad (ej: 50)"
@@ -73,7 +75,7 @@ UICornerSpeedBox.CornerRadius = UDim.new(0, 8)
 
 ApplyButton.Parent = MainFrame
 ApplyButton.BackgroundColor3 = Color3.fromRGB(0, 255, 0)
-ApplyButton.Position = UDim2.new(0.1, 0, 0.55, 0)
+ApplyButton.Position = UDim2.new(0.1, 0, 0.45, 0)
 ApplyButton.Size = UDim2.new(0, 200, 0, 30)
 ApplyButton.Font = Enum.Font.GothamBold
 ApplyButton.Text = "Aplicar Velocidad"
@@ -83,9 +85,21 @@ ApplyButton.TextScaled = true
 UICornerApplyButton.Parent = ApplyButton
 UICornerApplyButton.CornerRadius = UDim.new(0, 8)
 
+ToggleButton.Parent = MainFrame
+ToggleButton.BackgroundColor3 = Color3.fromRGB(70, 130, 180)
+ToggleButton.Position = UDim2.new(0.1, 0, 0.7, 0)
+ToggleButton.Size = UDim2.new(0, 200, 0, 30)
+ToggleButton.Font = Enum.Font.GothamBold
+ToggleButton.Text = "Autoclick: ON"
+ToggleButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+ToggleButton.TextScaled = true
+
+UICornerToggle.Parent = ToggleButton
+UICornerToggle.CornerRadius = UDim.new(0, 8)
+
 SpeedLabel.Parent = MainFrame
 SpeedLabel.BackgroundTransparency = 1
-SpeedLabel.Position = UDim2.new(0.1, 0, 0.8, 0)
+SpeedLabel.Position = UDim2.new(0.1, 0, 0.89, 0)
 SpeedLabel.Size = UDim2.new(0, 200, 0, 20)
 SpeedLabel.Font = Enum.Font.Gotham
 SpeedLabel.Text = "Velocidad actual: 50"
@@ -129,20 +143,31 @@ ApplyButton.MouseButton1Click:Connect(function()
     local newSpeed = tonumber(SpeedBox.Text)
     if newSpeed and newSpeed > 0 then
         autoClickSpeed = 1 / newSpeed
-        autoClickEnabled = true
         SpeedLabel.Text = "Velocidad actual: " .. newSpeed
-    elseif newSpeed == 0 then
-        autoClickEnabled = false
-        local character = player.Character
-        if character then
-            local tool = character:FindFirstChildOfClass("Tool")
-            if tool and tool:FindFirstChild("Handle") then
-                tool:Deactivate()
-            end
+        if autoClickEnabled then
+            SpeedLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
         end
-        SpeedLabel.Text = "Autoclick desactivado"
     else
         SpeedLabel.Text = "Velocidad actual: Inválida"
+    end
+end)
+
+ToggleButton.MouseButton1Click:Connect(function()
+    autoClickEnabled = not autoClickEnabled
+    if autoClickEnabled then
+        ToggleButton.Text = "Autoclick: ON"
+        ToggleButton.BackgroundColor3 = Color3.fromRGB(70, 130, 180)
+        SpeedBox.Active = true
+        SpeedBox.TextTransparency = 0
+        SpeedBox.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
+        SpeedLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+    else
+        ToggleButton.Text = "Autoclick: OFF"
+        ToggleButton.BackgroundColor3 = Color3.fromRGB(100, 100, 100)
+        SpeedBox.Active = false
+        SpeedBox.TextTransparency = 0.5
+        SpeedBox.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+        SpeedLabel.TextColor3 = Color3.fromRGB(255, 0, 0)
     end
 end)
 
